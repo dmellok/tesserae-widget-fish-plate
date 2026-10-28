@@ -120,7 +120,10 @@ def test_rows_rank_by_count_and_pick_the_best_open_photo() -> None:
 def test_open_photo_rejects_closed_licences() -> None:
     assert server.open_photo(_photo(1, None)) is None
     assert server.open_photo(_photo(1, "")) is None
-    assert server.open_photo(_photo(1, "cc-by-nd"))["lic"] == "CC BY ND"
+    # NoDerivatives photos may not be painted from, so they are not used at all
+    assert server.open_photo(_photo(1, "cc-by-nd")) is None
+    assert server.open_photo(_photo(1, "cc-by-nc-nd")) is None
+    assert server.open_photo(_photo(1, "cc-by-sa"))["lic"] == "CC BY SA"
     assert server.open_photo({"license_code": "cc0"}) is None  # no url
 
 
@@ -147,7 +150,11 @@ def test_base_query_place_or_user() -> None:
     q = server.base_query((-37.81, 144.96), "25", "", "90d", TODAY)
     assert q["lat"] == "-37.8100" and q["radius"] == "25" and q["d1"] == "2026-07-30"
     assert q["iconic_taxa"] == "Actinopterygii" and q["quality_grade"] == "research"
-    assert q["photo_license"] == server.LICENCES
+    assert (
+        q["photo_license"]
+        == server.LICENCES
+        == "cc0,cc-by,cc-by-nc,cc-by-sa,cc-by-nc-sa"
+    )
     u = server.base_query((-37.81, 144.96), "25", "someone", "all", TODAY)
     assert u["user_login"] == "someone" and "lat" not in u and "d1" not in u
 

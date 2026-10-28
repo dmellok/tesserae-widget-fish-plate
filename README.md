@@ -12,7 +12,10 @@ and number, and a scale bar at the foot.
 Every species on the plate is a research-grade record on
 [iNaturalist](https://www.inaturalist.org): a ray-finned fish (Actinopterygii)
 that at least two people agreed on, with a photo under a Creative Commons
-licence (CC0, BY, BY-NC, BY-SA, BY-NC-SA, BY-ND or BY-NC-ND). The widget asks
+licence that allows derivative works (CC0, BY, BY-NC, BY-SA or BY-NC-SA).
+Photos under BY-ND or BY-NC-ND are left out even for the photograph plate: an
+AI painting made from a photo is a derivative work, which the NoDerivatives
+licences forbid, and one species list serves both kinds of picture. The widget asks
 for the species counts within the radius of the place, ranks them by how many
 records each has, and takes the top one to five. Each species carries its
 best open photo (the taxon's own default photo when it is openly licensed,
@@ -25,8 +28,8 @@ Limits worth knowing:
   same as what lives there. Divers' favourites and shore fish are over-represented;
   deep, shy and small fish are under-represented.
 - "Research grade" means community-agreed, not expert-verified.
-- A species whose photos are all rights reserved is left off, since the widget
-  cannot show (or paint from) a photo it may not use.
+- A species whose photos are all rights reserved or NoDerivatives is left off,
+  since the widget cannot show, or paint from, a photo it may not use.
 - Records are cached for six hours per place and window, so a new observation
   takes up to that long to appear.
 

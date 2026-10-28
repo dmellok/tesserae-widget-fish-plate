@@ -43,7 +43,11 @@ USER_AGENT = (
     "tesserae/fish_plate/0.1.0 (+https://github.com/dmellok/tesserae-widget-fish-plate)"
 )
 INAT = "https://api.inaturalist.org/v1"
-LICENCES = "cc0,cc-by,cc-by-nc,cc-by-sa,cc-by-nc-sa,cc-by-nd,cc-by-nc-nd"
+# The photo licences the plate may use. No NoDerivatives licence: an AI painting
+# made from a photo is a derivative work, which CC BY-ND and CC BY-NC-ND forbid.
+# The same list filters the species counts, each species' latest record and the
+# taxon's curated photos.
+LICENCES = "cc0,cc-by,cc-by-nc,cc-by-sa,cc-by-nc-sa"
 LICENCE_SET = frozenset(LICENCES.split(","))
 HTTP_TIMEOUT_S = 15
 IMG_TIMEOUT_S = 40

@@ -101,26 +101,53 @@ function sideBySide(d, size, w, h) {
   return avail / n < 0.4 * h ? n : 0;
 }
 
+/* The row arrangement for a wide cell. A single row is kept when it fills the height
+   (two fishes, or a very wide cell); when its pictures, each limited to a column's
+   width, would fill less than two thirds of the room, the fishes go in two rows and
+   each row's pictures are sized by the height it has: three as two over one (the lone
+   one centred), four as two over two, five as three over two. */
+const PHOTO_ASPECT = 5 / 3;
+
+function rowPlan(shown, w, h) {
+  const n = shown.length;
+  const cq = Math.min(w, h);
+  const gapX = Math.min(36, Math.max(8, 0.03 * cq));
+  const bodyW = w - 2 * Math.min(56, Math.max(10, 0.05 * cq));
+  const avail = h * (1 - HEAD_SHARE - FOOT_SHARE);
+  const nameFont = Math.max(12, Math.min(26, 0.026 * cq));
+  const caption = 2.4 * nameFont;
+  const aspect = (s) => (s.pic && s.pic.kind === 'painting' && Number(s.pic.aspect) > 0 ? Number(s.pic.aspect) : PHOTO_ASPECT);
+  const plan = (cols, rows) => {
+    const cw = (bodyW - gapX * (cols - 1)) / cols;
+    const pich = Math.max(40, Math.floor(avail / rows - caption - (rows > 1 ? 12 : 0)));
+    const fill = shown.reduce((sum, s) => sum + Math.min(pich, cw / aspect(s)), 0) / (n * pich);
+    return { cols, rows, cw: Math.floor(cw), pich, fill };
+  };
+  const single = plan(n, 1);
+  if (n <= 2 || single.fill >= 0.667) return single;
+  return plan(n === 5 ? 3 : 2, 2);
+}
+
 function stacked(d, size, w, h) {
   const across = sideBySide(d, size, w, h);
   if (across) {
     const shown = d.species.slice(0, across);
-    const cols = across <= 3 ? across : across === 4 ? 2 : 3;
-    // a 2-column-per-fish grid lets the second row of five sit centred under the three
-    const span = across === 5 ? 2 : 1;
-    const tracks = across === 5 ? 6 : cols;
+    const plan = rowPlan(shown, w, h);
+    const n = shown.length;
+    // five fishes sit on a six-track grid (each spanning two) so the second row of two
+    // centres under the three; three in two rows put the lone fish centred, column wide
+    const six = plan.rows === 2 && n === 5;
+    const tracks = six ? 6 : plan.cols;
     const cells = shown
       .map((s, i) => {
-        const col = across === 5 && i >= 3 ? ` style="grid-column:${(i - 3) * 2 + 2} / span 2"` : span > 1 ? ' style="grid-column:span 2"' : '';
+        let style = '';
+        if (six) style = i >= 3 ? ` style="grid-column:${(i - 3) * 2 + 2} / span 2"` : ' style="grid-column:span 2"';
+        else if (plan.rows === 2 && n === 3 && i === 2) style = ` style="grid-column:1 / span 2;width:${plan.cw}px;justify-self:center"`;
         const name = `<span class="fp-common">${esc(s.name)}</span>${s.sci && s.sci !== s.name ? `<span class="fp-sci">${esc(s.sci)}</span>` : ''}`;
-        return `<figure class="fp-fish"${col}>${picture(s, 'fp-pic')}<figcaption class="fp-name fp-name-2">${name}</figcaption></figure>`;
+        return `<figure class="fp-fish"${style}>${picture(s, 'fp-pic')}<figcaption class="fp-name fp-name-2">${name}</figcaption></figure>`;
       })
       .join('');
-    const rows = across > 3 ? 2 : 1;
-    // the room each picture has: the body split by rows, less a two-line caption
-    const nameFont = Math.max(12, Math.min(26, 0.026 * Math.min(w, h)));
-    const pich = Math.max(40, Math.floor((h * (1 - HEAD_SHARE - FOOT_SHARE)) / rows - 2.4 * nameFont - (rows > 1 ? 12 : 0)));
-    return `${head(d, size, w)}<main class="fp-row c${cols}" style="--tracks:${tracks};--rows:${rows};--pich:${pich}px">${cells}</main>${foot(d, shown, size)}`;
+    return `${head(d, size, w)}<main class="fp-row c${plan.cols}" style="--tracks:${tracks};--rows:${plan.rows};--pich:${plan.pich}px">${cells}</main>${foot(d, shown, size)}`;
   }
   const n = rowsFor(d, size, w, h);
   const shown = d.species.slice(0, n);

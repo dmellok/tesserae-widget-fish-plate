@@ -574,6 +574,21 @@ def cut_to_fish(raw: bytes) -> bytes | None:
     return out.getvalue()
 
 
+def aspect_of(path: Path | None) -> float:
+    """Width over height of a picture file, or 1.5 when it cannot be read; the
+    page lays a row out from it before the pictures have decoded."""
+    if path is None:
+        return 1.5
+    try:
+        from PIL import Image
+
+        with Image.open(path) as im:
+            w, h = im.size
+        return round(w / h, 3) if w and h else 1.5
+    except Exception:
+        return 1.5
+
+
 def painting_src(art: Any, key: str, data_dir: Path, px: int, levels: str) -> str:
     """The kept painting as a data URI, cut to the fish once and then derived
     per size and panel by the collection; the whole picture when the cut fails."""
@@ -836,10 +851,12 @@ def _fetch(
             if got_art.ready:
                 src = painting_src(art, key, data_dir, px, levels)
                 if src:
+                    cut = ART.folder(data_dir) / f"{key}__cut.png"
                     row["pic"] = {
                         "src": src,
                         "kind": "painting",
                         "credit": str(got_art.meta.get("credit") or "AI painting"),
+                        "aspect": aspect_of(cut if cut.exists() else got_art.path),
                     }
     if art is not None:
         art.finish(ctx, facet=style)

@@ -1,0 +1,344 @@
+{
+  "tesserae_compat": "1.x",
+  "tesserae_min": "0.463.0",
+  "name": "Fish Plate",
+  "version": "0.1.0",
+  "kind": "widget",
+  "description": "The fishes of the waters around the panel as a natural-history plate: the most recorded species on iNaturalist within a radius, in lateral view, stacked on cream paper with their names in script beneath, a plate title and number and a scale bar. Photographs, or AI paintings in five styles after Bloch, gyotaku and others.",
+  "icon": "ph-fish",
+  "category": "art",
+  "supports": {
+    "sizes": [
+      "sm",
+      "md",
+      "lg"
+    ]
+  },
+  "requires": [
+    "network:*"
+  ],
+  "render": {
+    "needs_network": true,
+    "warm_ahead_s": 150
+  },
+  "design": {
+    "palette": "extended"
+  },
+  "cell_options": [
+    {
+      "name": "location",
+      "type": "location_search",
+      "label": "Place",
+      "default": "",
+      "help": "Whose waters to draw. Falls back to the app-level location in Settings when empty."
+    },
+    {
+      "name": "source",
+      "type": "select",
+      "label": "Source",
+      "default": "place",
+      "help": "The place looks at every research-grade fish record within the radius. An iNaturalist username draws the fishes that one person has recorded, anywhere.",
+      "choices": [
+        {
+          "value": "place",
+          "label": "Records near the place"
+        },
+        {
+          "value": "user",
+          "label": "One iNaturalist user's records"
+        }
+      ]
+    },
+    {
+      "name": "inat_user",
+      "type": "string",
+      "label": "iNaturalist username",
+      "default": "",
+      "help": "The login name as it appears in the address of their profile page.",
+      "show_if": {
+        "source": "user"
+      }
+    },
+    {
+      "name": "radius_km",
+      "type": "select",
+      "label": "Within",
+      "default": "25",
+      "help": "How far round the place to look.",
+      "show_if": {
+        "source": "place"
+      },
+      "choices": [
+        {
+          "value": "5",
+          "label": "5 km"
+        },
+        {
+          "value": "10",
+          "label": "10 km"
+        },
+        {
+          "value": "25",
+          "label": "25 km"
+        },
+        {
+          "value": "50",
+          "label": "50 km"
+        },
+        {
+          "value": "100",
+          "label": "100 km"
+        }
+      ]
+    },
+    {
+      "name": "count",
+      "type": "select",
+      "label": "How many",
+      "default": "3",
+      "help": "Species on the plate, the most recorded first. Small cells show fewer: one at sm, what fits at md.",
+      "choices": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        },
+        {
+          "value": "5",
+          "label": "5"
+        }
+      ]
+    },
+    {
+      "name": "layout",
+      "type": "select",
+      "label": "Layout",
+      "default": "stack",
+      "help": "Stacked plate is the fishes one above another with a name line under each. Hero is the most recorded fish large inside a ruled frame, with the next two small in the lower corners.",
+      "choices": [
+        {
+          "value": "stack",
+          "label": "Stacked plate"
+        },
+        {
+          "value": "hero",
+          "label": "Hero"
+        }
+      ]
+    },
+    {
+      "name": "pictures",
+      "type": "select",
+      "label": "Pictures",
+      "default": "photo",
+      "help": "Photographs cost nothing: each species' openly licensed photo from iNaturalist in a soft oval, with its credit. AI paintings paint each species once, from that photo, in the style below, at about US$0.04 a species; the plate shows the photograph until the painting lands. Needs a fal.ai key in this widget's settings or under Settings, Generative AI.",
+      "choices": [
+        {
+          "value": "photo",
+          "label": "Photographs"
+        },
+        {
+          "value": "gen",
+          "label": "AI paintings"
+        }
+      ]
+    },
+    {
+      "name": "style",
+      "type": "select",
+      "label": "Style",
+      "default": "bloch",
+      "help": "The style every painting is made in. Each style is painted once per species and kept. Gyotaku and the line drawing are black ink only, the ones for a black and white panel.",
+      "show_if": {
+        "pictures": "gen"
+      },
+      "choices": [
+        {
+          "value": "bloch",
+          "label": "Hand-coloured engraving after Bloch"
+        },
+        {
+          "value": "gyotaku",
+          "label": "Gyotaku ink print"
+        },
+        {
+          "value": "watercolour",
+          "label": "Watercolour"
+        },
+        {
+          "value": "woodcut",
+          "label": "Woodcut"
+        },
+        {
+          "value": "line",
+          "label": "Scientific line drawing"
+        }
+      ]
+    },
+    {
+      "name": "window",
+      "type": "select",
+      "label": "Window",
+      "default": "all",
+      "help": "Which records count. All time ranks the species by every research-grade record there has ever been; the shorter windows follow what people are finding now.",
+      "choices": [
+        {
+          "value": "all",
+          "label": "All time"
+        },
+        {
+          "value": "year",
+          "label": "This year"
+        },
+        {
+          "value": "90d",
+          "label": "Last 90 days"
+        }
+      ],
+      "advanced": true
+    },
+    {
+      "name": "waters",
+      "type": "string",
+      "label": "Waters",
+      "default": "",
+      "help": "The name of the water for the plate title, such as the Yarra or Port Phillip Bay: the title becomes FISHES OF <waters>. Blank gives FISHES NEAR <place>.",
+      "advanced": true
+    },
+    {
+      "name": "paper",
+      "type": "select",
+      "label": "Paper",
+      "default": "cream",
+      "choices": [
+        {
+          "value": "cream",
+          "label": "Cream"
+        },
+        {
+          "value": "white",
+          "label": "White"
+        },
+        {
+          "value": "aged",
+          "label": "Aged"
+        }
+      ],
+      "advanced": true
+    },
+    {
+      "name": "panel",
+      "type": "select",
+      "label": "Panel",
+      "default": "colour",
+      "help": "What the panel can show. Pictures are converted and contrast-stretched to match; on black and white the type is thickened.",
+      "advanced": true,
+      "choices": [
+        {
+          "value": "colour",
+          "label": "Colour"
+        },
+        {
+          "value": "gray16",
+          "label": "16 greys"
+        },
+        {
+          "value": "gray4",
+          "label": "4 greys"
+        },
+        {
+          "value": "mono",
+          "label": "Black and white"
+        }
+      ]
+    },
+    {
+      "name": "model",
+      "type": "select",
+      "label": "Model",
+      "default": "nano_banana",
+      "help": "All on fal.ai, all painting from a photo of the species. Nano Banana is faithful and cheap; Nano Banana Pro follows an unusual instruction better and draws finer detail; FLUX.1 Kontext Pro adheres most strongly to a style; GPT Image 2 is a good likeness with a narrower range; Seedream 4 is the budget one. A painting made with one model is kept when you switch to another.",
+      "show_if": {
+        "pictures": "gen"
+      },
+      "advanced": true,
+      "choices": [
+        {
+          "value": "nano_banana",
+          "label": "Nano Banana (about US$0.04)"
+        },
+        {
+          "value": "nano_banana_pro",
+          "label": "Nano Banana Pro (about US$0.15)"
+        },
+        {
+          "value": "flux_kontext",
+          "label": "FLUX.1 Kontext Pro (about US$0.04)"
+        },
+        {
+          "value": "gpt_image",
+          "label": "GPT Image 2 (about US$0.05)"
+        },
+        {
+          "value": "seedream",
+          "label": "Seedream 4 (about US$0.03)"
+        }
+      ]
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "label": "Title",
+      "default": "",
+      "help": "Blank uses the waters or the place.",
+      "advanced": true
+    },
+    {
+      "name": "credits",
+      "type": "boolean",
+      "label": "Credits",
+      "default": true,
+      "help": "The photographers and licences at the foot of the plate. The CC licences ask for them, so leave this on where the panel is seen by others.",
+      "advanced": true
+    }
+  ],
+  "settings": [
+    {
+      "name": "fal_api_key",
+      "type": "string",
+      "label": "fal.ai API key (AI paintings)",
+      "secret": true,
+      "default": "",
+      "help": "With a key the widget can paint each fish from its own photograph, at about US$0.04 a painting, once per species and style. Get one at https://fal.ai/dashboard/keys; it is only sent to fal.run. Without one the widget shows photographs."
+    },
+    {
+      "name": "gen_daily_usd",
+      "type": "slider",
+      "label": "Painting budget per day",
+      "default": 2,
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "US$",
+      "help": "The most the widget may spend on new paintings in a day, at the models' listed prices (US$2 is about fifty Nano Banana paintings). 0 is no limit. Paintings are kept, so a species in a style only costs once."
+    },
+    {
+      "name": "gen_per_refresh",
+      "type": "number",
+      "label": "New paintings started per preview",
+      "default": 3,
+      "help": "How many new paintings one settled preview in the editor may start (1 to 50). A panel's own render starts what its page needs, within the daily number."
+    }
+  ]
+}

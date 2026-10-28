@@ -38,11 +38,12 @@
   font-size: clamp(11px, 3cqmin, 24px); letter-spacing: 0.02em; color: var(--ink-soft);
 }
 .fp-title {
-  margin: 0; padding: 0 clamp(30px, 9cqmin, 80px);
+  margin: 0; padding: 0;
   font-family: var(--serif); font-weight: 800; text-transform: uppercase;
-  font-size: clamp(14px, min(7.2cqmin, 4.6cqw), 54px); line-height: 1.02; letter-spacing: 0.02em;
-  overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere;
+  font-size: clamp(14px, 4.4cqw, 54px); line-height: 1.02; letter-spacing: 0.02em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+.fp-head.has-corner .fp-title { padding: 0 clamp(30px, 9cqmin, 80px); }
 .fp-sub {
   margin-top: 0.25em;
   font-family: var(--serif); font-style: italic; font-weight: 500;
@@ -64,7 +65,7 @@
   row-gap: clamp(2px, 0.8cqmin, 8px);
 }
 .fp-pic { height: 100%; min-height: 0; max-width: 100%; display: flex; align-items: center; justify-content: center; }
-.fp-pic img { height: 100%; width: auto; max-width: 100%; object-fit: contain; }
+.fp-pic img { height: 100%; width: 100%; object-fit: contain; }
 .fp-pic.is-painting img { mix-blend-mode: multiply; }
 .fp-pic.is-photo {
   position: relative; aspect-ratio: 2 / 1; height: 100%; max-width: 84cqw;
@@ -83,6 +84,26 @@
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
 }
 .fp-dot { color: var(--ink-soft); padding: 0 0.1em; }
+
+/* ---- side by side: a wide cell's fishes in a row (or two) --------------- */
+
+.fp-row {
+  flex: 1 1 auto; min-height: 0;
+  display: grid; grid-template-columns: repeat(var(--tracks, 3), minmax(0, 1fr));
+  grid-template-rows: repeat(var(--rows, 1), auto); align-content: center;
+  column-gap: clamp(8px, 3cqmin, 36px); row-gap: clamp(4px, 1.5cqmin, 16px);
+  padding: clamp(4px, 1.5cqmin, 16px) 0 clamp(2px, 1cqmin, 10px);
+}
+/* each picture stands on its caption, the captions of a row on one line; the picture
+   fits its column and the room the row leaves it (--pich, worked out per cell) */
+.fp-row .fp-fish { width: 100%; display: grid; grid-template-rows: minmax(0, 1fr) auto; align-items: end; justify-items: center; min-height: 0; }
+.fp-row .fp-pic { width: 100%; height: auto; display: flex; align-items: flex-end; justify-content: center; }
+.fp-row .fp-pic img { width: auto; height: auto; max-width: 100%; max-height: var(--pich, 100cqh); }
+.fp-row .fp-pic.is-photo { width: min(100%, calc(var(--pich, 100cqh) * 1.667)); height: auto; aspect-ratio: 5 / 3; }
+.fp-row .fp-pic.is-photo img { width: 100%; height: 100%; max-height: none; }
+.fp-name-2 { display: grid; justify-items: center; line-height: 1.12; font-size: clamp(12px, 2.6cqmin, 26px); max-width: 100%; }
+.fp-name-2 .fp-common, .fp-name-2 .fp-sci { max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fp-name-2 .fp-sci { font-weight: 500; font-size: 0.82em; color: var(--ink-soft); }
 
 /* ---- foot: a scale bar and the credits --------------------------------- */
 
@@ -188,7 +209,7 @@
 
 /* ---- sm: one fish and its name ------------------------------------------ */
 
-.size-sm .fp-title { font-size: clamp(13px, 6.5cqmin, 20px); padding: 0 clamp(28px, 11cqmin, 60px); }
+.size-sm .fp-title { font-size: clamp(13px, 5cqw, 20px); padding: 0 clamp(28px, 11cqmin, 60px); }
 .size-sm .fp-plate { font-size: 11px; }
 .size-sm .fp-stack { padding-top: 4px; }
 .size-sm .fp-name { font-size: clamp(12px, 5cqmin, 18px); }

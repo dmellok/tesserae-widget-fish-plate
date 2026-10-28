@@ -66,10 +66,15 @@ function creditsLine(d, shown) {
   return bits.join('; ');
 }
 
-function head(d, size) {
-  const sub = size === 'sm' || !d.subtitle ? '' : `<div class="fp-sub">${esc(d.subtitle)}</div>`;
-  return `<header class="fp-head">
-    <div class="fp-plate">${esc(d.plate || '')}</div>
+/* The head: the title on one line, the plate number top right where the cell is wide
+   enough and in the subtitle line where it is not (a 600 px portrait cell, an md cell). */
+function head(d, size, w) {
+  const corner = size !== 'sm' && w >= 700;
+  const bits = [d.subtitle, corner ? '' : d.plate].filter(Boolean);
+  const sub = size === 'sm' || !bits.length ? '' : `<div class="fp-sub">${bits.map(esc).join(' · ')}</div>`;
+  const plate = corner || size === 'sm' ? `<div class="fp-plate">${esc(d.plate || '')}</div>` : '';
+  return `<header class="fp-head${corner || size === 'sm' ? ' has-corner' : ''}">
+    ${plate}
     <h1 class="fp-title">${esc(d.title || 'Fishes')}</h1>${sub}
   </header>`;
 }
@@ -85,7 +90,38 @@ function foot(d, shown, size) {
   </footer>`;
 }
 
+/* A landscape cell that would leave each stacked fish under two fifths of the height
+   puts the fishes side by side instead: two or three across, four as two rows of two,
+   five as a row of three over a row of two. Portrait cells and sm keep the stack. */
+function sideBySide(d, size, w, h) {
+  if (size === 'sm' || w <= h) return 0;
+  const n = Math.min(d.species.length, 5);
+  if (n < 2) return 0;
+  const avail = h * (1 - HEAD_SHARE - FOOT_SHARE);
+  return avail / n < 0.4 * h ? n : 0;
+}
+
 function stacked(d, size, w, h) {
+  const across = sideBySide(d, size, w, h);
+  if (across) {
+    const shown = d.species.slice(0, across);
+    const cols = across <= 3 ? across : across === 4 ? 2 : 3;
+    // a 2-column-per-fish grid lets the second row of five sit centred under the three
+    const span = across === 5 ? 2 : 1;
+    const tracks = across === 5 ? 6 : cols;
+    const cells = shown
+      .map((s, i) => {
+        const col = across === 5 && i >= 3 ? ` style="grid-column:${(i - 3) * 2 + 2} / span 2"` : span > 1 ? ' style="grid-column:span 2"' : '';
+        const name = `<span class="fp-common">${esc(s.name)}</span>${s.sci && s.sci !== s.name ? `<span class="fp-sci">${esc(s.sci)}</span>` : ''}`;
+        return `<figure class="fp-fish"${col}>${picture(s, 'fp-pic')}<figcaption class="fp-name fp-name-2">${name}</figcaption></figure>`;
+      })
+      .join('');
+    const rows = across > 3 ? 2 : 1;
+    // the room each picture has: the body split by rows, less a two-line caption
+    const nameFont = Math.max(12, Math.min(26, 0.026 * Math.min(w, h)));
+    const pich = Math.max(40, Math.floor((h * (1 - HEAD_SHARE - FOOT_SHARE)) / rows - 2.4 * nameFont - (rows > 1 ? 12 : 0)));
+    return `${head(d, size, w)}<main class="fp-row c${cols}" style="--tracks:${tracks};--rows:${rows};--pich:${pich}px">${cells}</main>${foot(d, shown, size)}`;
+  }
   const n = rowsFor(d, size, w, h);
   const shown = d.species.slice(0, n);
   const rows = shown
@@ -93,7 +129,7 @@ function stacked(d, size, w, h) {
       (s) => `<figure class="fp-fish">${picture(s, 'fp-pic')}<figcaption class="fp-name">${nameLine(s)}</figcaption></figure>`,
     )
     .join('');
-  return `${head(d, size)}<main class="fp-stack n${n}" style="--n:${n}">${rows}</main>${foot(d, shown, size)}`;
+  return `${head(d, size, w)}<main class="fp-stack n${n}" style="--n:${n}">${rows}</main>${foot(d, shown, size)}`;
 }
 
 function hero(d, size) {

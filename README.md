@@ -61,8 +61,13 @@ drawing are black ink only, the ones for a black and white panel.
 **Stacked plate** is the fishes one above another, each spanning most of the
 width, with "Common name · Scientific name" in an italic serif beneath, the
 title at the top, the plate number top right, and a scale bar at the foot that
-carries the area and record count. Small cells show fewer fishes: one at sm,
-and at md whatever fits at a readable size.
+carries the area and record count. On a landscape cell where the stack would
+leave each fish under two fifths of the height, the fishes go side by side
+instead (two or three across, four as two rows of two, five as three over two)
+with each caption under its fish, so the fish stays the biggest thing on the
+page in every cell shape. Portrait cells keep the stack; sm shows one fish and
+its name. Where the cell is under 700 px wide the plate number moves into the
+subtitle line so the title keeps to one line.
 
 **Hero** is the most recorded fish large across the page inside a double ruled
 frame with corner flourishes, its name in large serif capitals beneath, the
@@ -110,14 +115,14 @@ Settings (one set for every cell): the fal.ai key, a painting budget per day
 
 | | |
 | --- | --- |
-| ![Stacked plate, Bloch paintings, 1200x800](screenshots/lg.png) | ![Hero, Bloch paintings on aged paper, 1200x800](screenshots/extra-1.png) |
-| Stacked plate, Bloch paintings, 1200x800 | Hero, Bloch paintings on aged paper, 1200x800 |
+| ![Stacked plate, three Bloch paintings across, 1200x800](screenshots/lg.png) | ![Hero, Bloch paintings on aged paper, 1200x800](screenshots/extra-1.png) |
+| Stacked plate, three Bloch paintings across, 1200x800 | Hero, Bloch paintings on aged paper, 1200x800 |
 | ![Stacked plate, photographs, 1200x800](screenshots/extra-2.png) | ![Hero, photographs, 1200x800](screenshots/extra-3.png) |
-| Stacked plate, photographs, 1200x800 | Hero, photographs, 1200x800 |
+| Stacked plate, three photographs across, 1200x800 | Hero, photographs, 1200x800 |
 | ![Portrait half panel, Bloch paintings on white paper, 600x800](screenshots/extra-4.png) | ![13.3" portrait, five species in photographs, 1200x1600](screenshots/extra-5.png) |
 | Portrait half panel, Bloch paintings on white paper, 600x800 | 13.3" portrait, five species in photographs, 1200x1600 |
 | ![Gyotaku ink prints on a black and white panel, md](screenshots/extra-6.png) | ![Photographs at md, 640x400](screenshots/extra-7.png) |
-| Gyotaku ink prints on a black and white panel, 640x400 | Photographs at md, 640x400 |
+| Gyotaku ink prints on a black and white panel, 640x400 | Photographs at md, 640x400, three across |
 | ![One gyotaku fish at sm, black and white panel, 380x240](screenshots/extra-8.png) | ![Bloch paintings with the dark theme, 640x400](screenshots/extra-9.png) |
 | One gyotaku fish at sm on a black and white panel, 380x240 | Bloch paintings under the dark theme, 640x400 (the paper stays paper) |
 

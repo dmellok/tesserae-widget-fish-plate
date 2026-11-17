@@ -1,7 +1,7 @@
 {
   "tesserae_compat": "1.x",
   "tesserae_min": "0.463.0",
-  "name": "Fish Plate",
+  "name": "Picture, Fish Plate",
   "version": "0.1.0",
   "kind": "widget",
   "description": "The fishes of the waters around the panel as a natural-history plate: the most recorded species on iNaturalist within a radius, in lateral view, stacked on cream paper with their names in script beneath, a plate title and number and a scale bar. Photographs, or AI paintings in five styles after Bloch, gyotaku and others.",

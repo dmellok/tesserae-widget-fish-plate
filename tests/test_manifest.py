@@ -38,7 +38,7 @@ def _up_front(o: dict) -> bool:
 
 
 def test_manifest_basics() -> None:
-    assert MANIFEST["name"] == "Fish Plate"
+    assert MANIFEST["name"] == "Picture, Fish Plate"
     assert MANIFEST["kind"] == "widget"
     assert MANIFEST["icon"] == "ph-fish"
     assert MANIFEST["category"] == "art"
